@@ -14,4 +14,13 @@ public class CadastroDisciplinas {
     public void removeDisciplina(String nome_disciplina){
         lista_disciplina.remove(nome_disciplina);
     }
+    public void menuDisciplina(){
+        System.out.println("----------------------------");
+        System.out.println("GESTÃO DE DISCIPLINAS - Escolha uma das opções:");
+        System.out.println("1 -- Adicionar disciplina");
+        System.out.println("2 -- Listar disciplinas");
+        System.out.println("3 -- Remover disciplina");
+        System.out.println("4 -- Sair");
+        System.out.println("----------------------------");
+    }
 }

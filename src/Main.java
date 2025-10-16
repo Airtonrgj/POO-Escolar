@@ -6,19 +6,13 @@ public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         CadastroDisciplinas disciplinas = new CadastroDisciplinas();
-        System.out.println("----------------------------");
-        System.out.println("Menu Escolar - Escolha uma das opções:");
-        System.out.println("1 -- Adicionar disciplina");
-        System.out.println("2 -- Listar disciplinas");
-        System.out.println("3 -- Remover disciplina");
-        System.out.println("6 -- Sair");
-        System.out.println("----------------------------");
-        int menuop;
+        int menu_disciplina_op;
         do{
-            menuop = input.nextInt();
+            disciplinas.menuDisciplina();
+            menu_disciplina_op = input.nextInt();
             input.nextLine();
-            switch (menuop) {
-                case 1:
+            switch (menu_disciplina_op) { // Provável que tudo isso abaixo terá que virar um method so para
+                case 1: // Conseguir portar um menu principal, e esse menu. Ainda vou ver isso.
                     System.out.println("Insira o nome da nova matéria");
                     String novadisciplina = input.nextLine();
                     if(novadisciplina.isEmpty()){
@@ -52,19 +46,12 @@ public class Main {
                     }
                     break;
                 case 4:
-                    System.out.println("wip");
-                    break;
-                case 5:
-                    System.out.println("wip");
-                    break;
-                case 6:
                     System.out.println("SAINDO . . .");
                     break;
                 default:
                     System.out.println("Opção Inválida, tente novamente!");
-                    continue;
             }
-        } while (menuop != 6);
+        } while (menu_disciplina_op != 4);
     }
 
 

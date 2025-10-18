@@ -24,7 +24,7 @@ public class CadastroDisciplinas {
             System.out.println("1 -- Adicionar disciplina");
             System.out.println("2 -- Listar disciplinas");
             System.out.println("3 -- Remover disciplina");
-            System.out.println("4 -- Sair");
+            System.out.println("4 -- Retornar ao Menu Principal");
             System.out.println("----------------------------");
             menu_disciplina_op = input_menudiscip.nextInt();
             input_menudiscip.nextLine();
@@ -63,7 +63,7 @@ public class CadastroDisciplinas {
                     }
                     break;
                 case 4:
-                    System.out.println("SAINDO . . .");
+                    System.out.println("RETORNANDO . . .");
                     break;
                 default:
                     System.out.println("Opção Inválida, tente novamente!");

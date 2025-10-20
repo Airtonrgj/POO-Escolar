@@ -20,11 +20,17 @@ public class CadastroDisciplinas { // O problema de fazer o trabalho cegamente..
     }
 
     public void adicionarDisciplina(Disciplina d) { // Add Disciplina
-        if (!disciplinas.add(d)) {
+
+        if (disciplinas.stream().anyMatch(disc -> disc.getCodigo().equals(d.getCodigo()))) {
             System.out.println("A disciplina com código '" + d.getCodigo() + "' já existe. Ignorada.");
-        } else {
-            System.out.println("Disciplina adicionada: " + d);
+            return;
         }
+        if (disciplinas.stream().anyMatch(disc -> disc.getNome().equalsIgnoreCase(d.getNome()))) {
+            System.out.println("A disciplina com nome '" + d.getNome() + "' já existe. Ignorada.");
+            return;
+        }
+            disciplinas.add(d);
+            System.out.println("Disciplina adicionada: " + d + "(" + d.getCodigo() + ")");
     }
 
     public void removerDisciplina(String codigo) { // Remove Disciplina por Código
@@ -73,8 +79,8 @@ public class CadastroDisciplinas { // O problema de fazer o trabalho cegamente..
                         break;
                     } else {
                         adicionarDisciplina(new Disciplina(nome_disc, codigo_disc));
-                        System.out.println("Nova Disciplina: " + nome_disc + "(" + codigo_disc + ")");
-                        break;}
+                        break;
+                    }
                 case 2:
                         Set<Disciplina> lista = obterTodasDisciplinas();
                         System.out.println("Disciplinas Cadastradas:");

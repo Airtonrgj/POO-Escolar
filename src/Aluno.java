@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ public class Aluno {
             }
             this.nome = nome;
             this.matricula = matricula;
+            this.notas = new ArrayList<>();
         }
 
         public String getNome() {

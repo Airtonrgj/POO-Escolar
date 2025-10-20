@@ -12,16 +12,19 @@ public class Main {
         System.out.println("***********************************************");
     }
 
-    public static void main(String[] args) {
-        int menu_op;
+    public static void main(String[] args) { // UM AVISO: Percebi um comportamento anomalo que ainda nao vi como reparar
+        int menu_op; /* Mas se trata do menu de disciplinas, se ele voltar para o menu principal, tudo que foi feito
+        será descartado, logo, deve ser feito alguma forma de impedir isso (juntar todos os menus em um na main pode
+        ser uma possível solução, mas deve ser visto como não quebrar os métodos usados dentro da classe
+         CadastroDisciplinas caso for feito isso.*/
         do {
             menuPrincipal();
+            CadastroDisciplinas disciplinas = new CadastroDisciplinas();
             Scanner input_menu = new Scanner(System.in);
             menu_op = input_menu.nextInt();
             switch (menu_op) {
                 case 1:
-                    CadastroDisciplinas disciplinas = new CadastroDisciplinas();
-                    disciplinas.menuDisciplina();
+                disciplinas.menuDisciplina();
                     break;
                 case 2:
                     System.out.println("EM PROGRESSO (W.I.P.)");

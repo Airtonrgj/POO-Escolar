@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.Scanner;
 import java.util.Map;
+import java.util.stream.Collectors; // Necessário para o código de exibição
 
 public class Main {
 
@@ -13,7 +14,7 @@ public class Main {
         System.out.println("***********************************************");
         System.out.println("Menu da Escola (POO - Coleções Java):");
         System.out.println("1 - Gerenciar Estudantes (Parte A)");
-        System.out.println("2 - Gerenciar Disciplinas (Parte B)"); // Alterado para Menu Interativo
+        System.out.println("2 - Gerenciar Disciplinas (Parte B)");
         System.out.println("3 - Gerar Consultas e Relatórios (Parte D)"); // Sua função
         System.out.println("4 - Sair");
         System.out.println("***********************************************");
@@ -42,17 +43,16 @@ public class Main {
 
             switch (menuOp) {
                 case 1:
-                    // Se o grupo criar um menu interativo para Estudantes, chamaria aqui
-                    System.out.println("Funcionalidade Gerenciar Estudantes em desenvolvimento.");
-                    listaEstudantes.getEstudantes().forEach(System.out::println);
+                    // Menu Interativo para Gerenciar Estudantes
+                    menuGerenciarEstudantes(inputMenu);
                     break;
                 case 2:
-                    // CHAMA O NOVO MENU DE INTERAÇÃO PARA DISCIPLINAS
+                    // Menu Interativo para Gerenciar Disciplinas
                     menuGerenciarDisciplinas(inputMenu);
                     break;
                 case 3:
-                    // SUA FUNÇÃO PRINCIPAL: Gerar os Relatórios
-                    gerarRelatorios();
+                    // Menu de Sub-Consultas (Sua Função)
+                    menuConsultas(inputMenu);
                     break;
                 case 4:
                     System.out.println("Saindo do Sistema. Obrigado!");
@@ -65,15 +65,80 @@ public class Main {
         inputMenu.close();
     }
 
-    // NOVO MÉTODO: Lógica de Interação para a Parte B (Disciplinas)
+
+    // =========================================================================
+    // MÉTODOS DE GERENCIAMENTO INTERATIVO (CASES 1 E 2)
+    // =========================================================================
+
+    public static void menuGerenciarEstudantes(Scanner input) {
+        int op;
+
+        do {
+            System.out.println("\n--- GERENCIAMENTO DE ESTUDANTES (Parte A) ---");
+            System.out.println("1. Adicionar Novo Estudante"); //
+            System.out.println("2. Remover Estudante por Matrícula"); //
+            System.out.println("3. Listar Estudantes (Ordem de Inserção)"); //
+            System.out.println("4. Listar Estudantes Ordenados por Nome"); //
+            System.out.println("5. Voltar ao Menu Principal");
+            System.out.print("Escolha uma opção: ");
+
+            if (input.hasNextInt()) {
+                op = input.nextInt();
+                input.nextLine();
+            } else {
+                System.out.println("Entrada inválida. Digite um número.");
+                input.nextLine();
+                op = 0;
+                continue;
+            }
+
+            switch (op) {
+                case 1:
+                    System.out.print("Nome do Estudante: ");
+                    String nome = input.nextLine();
+                    System.out.print("Matrícula/ID (String): ");
+                    String matricula = input.nextLine();
+
+                    if(nome.isBlank() || matricula.isBlank()){
+                        System.out.println("Nome e Matrícula são obrigatórios.");
+                    } else {
+                        listaEstudantes.adicionarEstudante(new Estudante(nome, matricula));
+                    }
+                    break;
+                case 2:
+                    System.out.print("Digite a Matrícula/ID para remover: ");
+                    String matRemover = input.nextLine();
+                    if (listaEstudantes.removerEstudantePorMatricula(matRemover)) {
+                        System.out.println("Estudante com Matrícula " + matRemover + " removido com sucesso.");
+                    } else {
+                        System.out.println("Erro: Estudante com Matrícula " + matRemover + " não encontrado.");
+                    }
+                    break;
+                case 3:
+                    System.out.println("\n--- Estudantes Cadastrados ---");
+                    listaEstudantes.getEstudantes().forEach(System.out::println);
+                    break;
+                case 4:
+                    System.out.println("\n--- Estudantes Ordenados por Nome ---");
+                    listaEstudantes.ordenarEstudantesPorNome().forEach(System.out::println);
+                    break;
+                case 5:
+                    System.out.println("Retornando ao Menu Principal.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (op != 5);
+    }
+
     public static void menuGerenciarDisciplinas(Scanner input) {
         int op;
 
         do {
             System.out.println("\n--- GERENCIAMENTO DE DISCIPLINAS (Parte B) ---");
-            System.out.println("1. Adicionar Nova Disciplina");
-            System.out.println("2. Listar Todas as Disciplinas");
-            System.out.println("3. Remover Disciplina por Código");
+            System.out.println("1. Adicionar Nova Disciplina"); //
+            System.out.println("2. Listar Todas as Disciplinas"); //
+            System.out.println("3. Remover Disciplina por Código"); //
             System.out.println("4. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
 
@@ -94,11 +159,9 @@ public class Main {
                     System.out.print("Código da Disciplina (ex: PRG201): ");
                     String codigo = input.nextLine().toUpperCase();
 
-                    // Validação básica de entrada de dados
                     if(nome.isEmpty() || codigo.isEmpty() || !codigo.matches("^[A-Z]{3}[0-9]{3}$")){
                         System.out.println("Dados inválidos. Use o formato XXX999 e preencha o nome.");
                     } else {
-                        // Adiciona a disciplina (a lógica de Set garante que duplicatas sejam ignoradas)
                         cadastroDisciplinas.adicionarDisciplina(new Disciplina(codigo, nome));
                     }
                     break;
@@ -124,7 +187,113 @@ public class Main {
         } while (op != 4);
     }
 
-    // Método para Carregar o Dataset de Exemplo
+    // =========================================================================
+    // MÉTODOS DE CONSULTA E RELATÓRIO (CASE 3 - SUA FUNÇÃO)
+    // =========================================================================
+
+    public static void menuConsultas(Scanner input) {
+        int op;
+
+        do {
+            System.out.println("\n--- SELEÇÃO DE RELATÓRIOS (Parte D) ---");
+            System.out.println("1. Consultar Matrículas e Médias de Alunos"); // Requisito Média Aluno
+            System.out.println("2. Consultar Médias por Disciplina"); // Requisito Média Disciplina
+            System.out.println("3. Consultar Alunos Aprovados e Top Ranking"); // Requisito Alunos Aprovados
+            System.out.println("4. Gerar TODOS os Relatórios (Completo)");
+            System.out.println("5. Voltar ao Menu Principal");
+            System.out.print("Escolha uma opção: ");
+
+            if (input.hasNextInt()) {
+                op = input.nextInt();
+                input.nextLine();
+            } else {
+                System.out.println("Entrada inválida. Digite um número.");
+                input.nextLine();
+                op = 0;
+                continue;
+            }
+
+            switch (op) {
+                case 1: exibirMatriculasMedias(); break;
+                case 2: exibirMediasDisciplinas(); break;
+                case 3: exibirAprovadosETopN(); break;
+                case 4: gerarRelatorios(); break; // Gera o relatório completo
+                case 5: System.out.println("Retornando ao Menu Principal."); break;
+                default: System.out.println("Opção inválida.");
+            }
+        } while (op != 5);
+    }
+
+    private static void exibirMatriculasMedias() {
+        System.out.println("\n== Lista de Estudantes Ordenada por Nome ==");
+        listaEstudantes.ordenarEstudantesPorNome().forEach(System.out::println);
+
+        System.out.println("\n== Disciplinas Cadastradas (Ordem de Inserção) ==");
+        cadastroDisciplinas.obterTodasDisciplinas().forEach(System.out::println);
+
+        System.out.println("\n== Matrículas, Notas e Médias dos Alunos ==");
+        for (Estudante estudante : listaEstudantes.getEstudantes()) {
+            System.out.printf("  %s: ", estudante.getNome());
+            List<Matricula> matriculas = historicoNotas.getNotasPorEstudante().getOrDefault(estudante.getMatricula(), List.of());
+
+            if (matriculas.isEmpty()) {
+                System.out.println("Nenhuma matrícula.");
+                continue;
+            }
+
+            // Exibição no formato: DISC(Nota), DISC(Nota) Média: X.XX
+            String notasStr = matriculas.stream()
+                    .map(m -> String.format("%s(%.1f)", m.getCodigoDisciplina(), m.getNota()))
+                    .collect(java.util.stream.Collectors.joining(", "));
+
+            double media = historicoNotas.mediaDoEstudante(estudante.getMatricula());
+            System.out.printf("%s Média: %.2f%n", notasStr, media);
+        }
+    }
+
+    private static void exibirMediasDisciplinas() {
+        System.out.println("\n== Médias por Disciplina ==");
+        for (Disciplina d : cadastroDisciplinas.obterTodasDisciplinas()) {
+            double media = historicoNotas.mediaDaDisciplina(d.getCodigo());
+            System.out.printf("  %s: %.2f%n", d.getCodigo(), media);
+        }
+    }
+
+    private static void exibirAprovadosETopN() {
+        // Top N Estudantes por Média
+        System.out.println("\n== Top 3 Alunos por Média ==");
+        List<Estudante> topAlunos = historicoNotas.topNEstudantesPorMedia(3);
+        for (int i = 0; i < topAlunos.size(); i++) {
+            Estudante aluno = topAlunos.get(i);
+            double media = historicoNotas.mediaDoEstudante(aluno.getMatricula());
+            System.out.printf("  %d) %s - %.2f%n", i + 1, aluno.getNome(), media);
+        }
+
+        // Alunos com média >= 8.0
+        System.out.println("\n== Alunos com Média Global >= 8.0 ==");
+        listaEstudantes.getEstudantes().stream()
+                .filter(e -> historicoNotas.mediaDoEstudante(e.getMatricula()) >= 8.0)
+                .forEach(e -> System.out.printf("  %s (%.2f)%n", e.getNome(), historicoNotas.mediaDoEstudante(e.getMatricula())));
+
+        // Disciplinas com média < 6.0
+        System.out.println("\n== Disciplinas com Média Global < 6.0 ==");
+        cadastroDisciplinas.obterTodasDisciplinas().stream()
+                .filter(d -> historicoNotas.mediaDaDisciplina(d.getCodigo()) < 6.0)
+                .forEach(d -> System.out.printf("  %s (Média: %.2f)%n", d.getNome(), historicoNotas.mediaDaDisciplina(d.getCodigo())));
+    }
+
+    // Método que gera o relatório completo (Opção 4 do menu de consultas)
+    private static void gerarRelatorios() {
+        exibirMatriculasMedias();
+        exibirMediasDisciplinas();
+        exibirAprovadosETopN();
+        System.out.println("\n=========================================\n");
+    }
+
+    // =========================================================================
+    // CARREGAMENTO DE DADOS (PARTE D - PONTO 1)
+    // =========================================================================
+
     private static void carregarDadosIniciais() {
         System.out.println("\n*** Carregando Dados Iniciais do Dataset de Exemplo ***");
 
@@ -221,72 +390,5 @@ public class Main {
         historicoNotas.adicionarMatricula("20", "PRG201", 5.5); // Thiago
 
         System.out.println("*** Dados carregados com sucesso. ***\n");
-    }
-
-    // O coração da sua função: Geração dos Relatórios (Consultas)
-    private static void gerarRelatorios() {
-        System.out.println("\n========= RELATÓRIOS E CONSULTAS (PARTE D) =========");
-
-        // 2. Exibir todos os estudantes ordenados por nome
-        System.out.println("\n== Lista de Estudantes Ordenada por Nome ==");
-        List<Estudante> estudantesOrdenados = listaEstudantes.ordenarEstudantesPorNome();
-        estudantesOrdenados.forEach(System.out::println);
-
-        // 3. Exibir todas as disciplinas (ordem de inserção)
-        System.out.println("\n== Disciplinas Cadastradas (Ordem de Inserção) ==");
-        cadastroDisciplinas.obterTodasDisciplinas().forEach(System.out::println);
-
-        // 4. Para cada estudante, exibir suas disciplinas e notas (Map)
-        System.out.println("\n== Matrículas, Notas e Médias dos Alunos ==");
-        for (Estudante estudante : listaEstudantes.getEstudantes()) {
-            System.out.printf("  %s: ", estudante.getNome());
-            // Chama getMatriculas com a matrícula String
-            List<Matricula> matriculas = historicoNotas.getNotasPorEstudante().getOrDefault(estudante.getMatricula(), List.of());
-
-            if (matriculas.isEmpty()) {
-                System.out.println("Nenhuma matrícula.");
-                continue;
-            }
-
-            // Exibição no formato: DISC(Nota), DISC(Nota) Média: X.XX
-            String notasStr = matriculas.stream()
-                    .map(m -> String.format("%s(%.1f)", m.getCodigoDisciplina(), m.getNota()))
-                    .collect(java.util.stream.Collectors.joining(", "));
-
-            // Chama mediaDoEstudante com a matrícula String
-            double media = historicoNotas.mediaDoEstudante(estudante.getMatricula());
-            System.out.printf("%s Média: %.2f%n", notasStr, media);
-        }
-
-        // Média por Disciplina (Pré-requisito para o ponto 5)
-        System.out.println("\n== Médias por Disciplina ==");
-        for (Disciplina d : cadastroDisciplinas.obterTodasDisciplinas()) {
-            double media = historicoNotas.mediaDaDisciplina(d.getCodigo());
-            System.out.printf("  %s: %.2f%n", d.getCodigo(), media);
-        }
-
-        // 5a. Top N Estudantes por Média (Sua função)
-        System.out.println("\n== Top 3 Alunos por Média ==");
-        List<Estudante> topAlunos = historicoNotas.topNEstudantesPorMedia(3);
-        for (int i = 0; i < topAlunos.size(); i++) {
-            Estudante aluno = topAlunos.get(i);
-            // Chama mediaDoEstudante com a matrícula String
-            double media = historicoNotas.mediaDoEstudante(aluno.getMatricula());
-            System.out.printf("  %d) %s - %.2f%n", i + 1, aluno.getNome(), media);
-        }
-
-        // 5b. Alunos com média >= 8.0
-        System.out.println("\n== Alunos com Média Global >= 8.0 ==");
-        listaEstudantes.getEstudantes().stream()
-                .filter(e -> historicoNotas.mediaDoEstudante(e.getMatricula()) >= 8.0)
-                .forEach(e -> System.out.printf("  %s (%.2f)%n", e.getNome(), historicoNotas.mediaDoEstudante(e.getMatricula())));
-
-        // 5c. Disciplinas com média < 6.0
-        System.out.println("\n== Disciplinas com Média Global < 6.0 ==");
-        cadastroDisciplinas.obterTodasDisciplinas().stream()
-                .filter(d -> historicoNotas.mediaDaDisciplina(d.getCodigo()) < 6.0)
-                .forEach(d -> System.out.printf("  %s (Média: %.2f)%n", d.getNome(), historicoNotas.mediaDaDisciplina(d.getCodigo())));
-
-        System.out.println("=========================================\n");
     }
 }
